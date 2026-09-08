@@ -6,11 +6,13 @@ import { notify } from "./notifications.js";
 const db = openDatabase();
 seed(db);
 const PORT = Number(process.env.PORT || 3001);
+const allowedOrigin = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 
 const json = (res, status, payload) => {
   res.writeHead(status, {
     "content-type": "application/json",
-    "access-control-allow-origin": "http://localhost:5173",
+    "access-control-allow-origin": allowedOrigin,
+    vary: "Origin",
   });
   res.end(JSON.stringify(payload));
 };
@@ -44,14 +46,17 @@ const body = (req) =>
 const server = http.createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
     res.writeHead(204, {
-      "access-control-allow-origin": "http://localhost:5173",
+      "access-control-allow-origin": allowedOrigin,
       "access-control-allow-methods": "GET,POST,DELETE,OPTIONS",
       "access-control-allow-headers": "content-type,x-user-id",
+      vary: "Origin",
     });
     return res.end();
   }
   const url = new URL(req.url, `http://${req.headers.host}`);
   try {
+    if (req.method === "GET" && url.pathname === "/health")
+      return json(res, 200, { status: "ok" });
     const userId = auth(req, res);
     if (!userId) return;
     if (req.method === "GET" && url.pathname === "/v1/availability") {
@@ -214,7 +219,7 @@ const server = http.createServer(async (req, res) => {
     });
   }
 });
-server.listen(PORT, "127.0.0.1", () =>
-  console.log(`Appointments API listening on http://127.0.0.1:${PORT}`),
+server.listen(PORT, "0.0.0.0", () =>
+  console.log(`Appointments API listening on :${PORT}`),
 );
 export { server, db };
