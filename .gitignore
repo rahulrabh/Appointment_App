@@ -1,0 +1,12 @@
+node_modules/
+node_modules
+dist/
+dist
+appointments.db
+appointments.db-*
+*.log
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/

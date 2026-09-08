@@ -1,0 +1,21 @@
+.slot:disabled {
+  background: #f1f3f0 !important;
+  border-color: #e1e5df !important;
+  color: #9aa29d !important;
+  cursor: not-allowed !important;
+  text-decoration: line-through;
+}
+.date-head button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.appointment-actions button {
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 6px 8px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.appointment-actions button:hover {
+  background: #fff0ee;
+  color: #a3443f;
+}
